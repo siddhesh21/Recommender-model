@@ -79,8 +79,8 @@ class ReccommendationsView(views.APIView):
         latest_n = 5
         response = {}
 
-        if "username" in request.GET:
-            username = request.GET["username"]
+        if True or "username" in request.GET:
+            username = request.GET.get("username", "hello")
             genre = request.GET.get("genre", "")
             print(request.GET)
             n = int(request.GET.get("n", 5))
@@ -91,19 +91,19 @@ class ReccommendationsView(views.APIView):
             user_preferences = get_user_preferences(username)
 
             genres_required = [genre]  if(genre in genres) else []
-
-            recommendations = get_user_recommendations(n=n, recent_movies = recent_movies, genres_required = genres_required, user_preferences = user_preferences)
             
             try:
-                movies = [get_movie(movie_id) for movie_id in recommendations["id"].values.ravel()]
-                response["movies"] = movies
+                recommendations = get_user_recommendations(n=n, recent_movies = recent_movies, genres_required = genres_required, user_preferences = user_preferences)
+                print("Recommendations Found")
+                response["movies"] = [get_movie(movie_id) for movie_id in recommendations["id"].values.ravel()]
                 response["success"] = True
+                print(recommendations)
             except:
                 print("No recommendations found")
                 movies = get_random_movies(n=n, genres_required=genres_required)
                 response["movies"] = [get_movie(movie_id) for movie_id in movies]
                 response["success"] = True
-            print(recommendations)
+            
                 
         return Response(response)
 
