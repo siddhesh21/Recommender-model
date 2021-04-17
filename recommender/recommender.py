@@ -12,7 +12,7 @@ columns_file = os.path.join(settings.BASE_DIR, "data","metric_columns.txt")
 df = pd.read_csv(movies_file)
 df["popularity"] = np.minimum(df["popularity"], 25)
 with open( columns_file, "r") as f:
-    metric_columns = [x.strip() for x in f.readlines()]
+    metric_columns = [x.encode('utf-8').strip() for x in f.readlines()]
 model_columns = metric_columns[5:]
 
 genres = ['Thriller', 'Action', 'Family', 'Drama', 'Crime', 'Comedy', 'War',  'Fantasy', 'Horror', 'Mystery', 'Music', 
